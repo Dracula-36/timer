@@ -18,7 +18,7 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Guanyu Li");
 MODULE_DESCRIPTION("An easy timer");
 
-static int interval = 10,time = 0,timer = 0;
+static int interval = 10, time = 0, timer = 0;
 module_param(interval, int, S_IRUGO|S_IWUSR);
 MODULE_PARM_DESC(interval, "The size of time interval");
 module_param(time, int, S_IRUGO|S_IWUSR);
@@ -30,9 +30,9 @@ static void timer_func(unsigned long data)
 {
     if ( timer >= time || timer < 0) 
         timer=0;
-    printk ("%d\n",timer);
+    printk ("%d\n", timer);
     timer = timer + 1;
-    mod_timer(&mytimer,jiffies + 1/1000 * interval * HZ);
+    mod_timer(&mytimer, jiffies + 1/1000 * interval * HZ);
 }
 
 static char *itoa(int num, char *str)
@@ -45,7 +45,7 @@ static char *itoa(int num, char *str)
     } while (num);
     str[i] = '\n';
     str[i+1] = '\0';
-    for (k = 0;k <= (i-1)/2;k++) {
+    for (k = 0; k <= (i-1)/2; k++) {
         temp = str[k];
         str[k] = str[i-k-1];
         str[i-k-1] = temp;
@@ -55,7 +55,7 @@ static char *itoa(int num, char *str)
 
 static int isspace(int x)  
 {  
-    if(x == ' ' || x == '\t' || x == '\n' || x == '\f' || x == '\b' || x == '\r')  
+    if (x == ' ' || x == '\t' || x == '\n' || x == '\f' || x == '\b' || x == '\r')  
         return 1;  
     else   
         return 0;  
@@ -63,7 +63,7 @@ static int isspace(int x)
   
 static int isdigit(int x)  
 {  
-    if(x <= '9' && x >= '0')           
+    if (x <= '9' && x>= '0')           
         return 1;   
     else   
         return 0;      
@@ -74,7 +74,7 @@ static int atoi(const char *nptr)
     int c;          
     int total;         
     int sign;           
-    while (isspace((int)(unsigned char)*nptr))  
+    while (isspace((int)(unsigned char)*nptr)) 
         ++nptr;  
     c = (int)(unsigned char)*nptr++;  
     sign = c;           
@@ -87,34 +87,33 @@ static int atoi(const char *nptr)
     }    
     if (sign == '-')  
         return -total;  
-    else 
+    else    
         return total;   
 }
 
 static ssize_t timer_read(struct file *file, char *buf, size_t count, loff_t *ppos)
 {    
     char output[20] = "now timer = ", num[10];
-    itoa(timer, num);
-    strcat (output, num);
-    int len;
-    len = strlen (output);
+    itoa(timer,num);
+    strcat (output,num);
+    int len = strlen (output);
     if (count < len) 
         return -EINVAL;
     if (*ppos != 0) 
         return 0;
-    if (copy_to_user(buf, output, len)) 
+    if (copy_to_user(buf,output,len)) 
         return -EINVAL;
     *ppos = len;
     return len;
 }
 
-static ssize_t timer_write(struct file *file, char *buf, size_t count, loff_t *ppos)
+static ssize_t timer_write(struct file *file, char __user *buf, size_t count, loff_t *ppos)
 {
     char kerbuf[100];
     int len;
     if (count == 0) 
         return 0;
-    if (copy_from_user(kerbuf, buf, count)) 
+    if (copy_from_user(kerbuf,buf,count)) 
         return -EINVAL;
     len = strlen (kerbuf);
     timer = atoi(kerbuf);
@@ -125,7 +124,7 @@ static ssize_t timer_write(struct file *file, char *buf, size_t count, loff_t *p
 static struct file_operations timer_fops = {
     .owner = THIS_MODULE,
     .read = timer_read,
-    .write = timer_write
+    .write = timer_write,
 };
 
 static struct miscdevice timer_miscdevice = {
@@ -136,9 +135,8 @@ static struct miscdevice timer_miscdevice = {
 
 static int __init timer_init(void)
 {
-    if (time == 0) 
-        time=100 * interval;
-    setup_timer(&mytimer, timer_func, (unsigned long)timer);
+    if (time == 0) time=100*interval;
+    setup_timer(&mytimer, timer_func,(unsigned long)timer);
     mytimer.expires = jiffies + 1/1000 * interval * HZ;
     add_timer(&mytimer);
     misc_register(&timer_miscdevice);

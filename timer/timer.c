@@ -20,7 +20,7 @@ MODULE_DESCRIPTION("An easy timer");
 
 static int interval = 10, time = 0, timer = 0;
 module_param(interval, int, S_IRUGO|S_IWUSR);
-MODULE_PARM_DESC(interval, "The size of time interval");
+MODULE_PARM_DESC(interval, "The size of time interval (ms)");
 module_param(time, int, S_IRUGO|S_IWUSR);
 MODULE_PARM_DESC(time, "The uplimit of timer");
 

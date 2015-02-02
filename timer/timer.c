@@ -93,10 +93,11 @@ static int atoi(const char *nptr)
 
 static ssize_t timer_read(struct file *file, char *buf, size_t count, loff_t *ppos)
 {    
+    int len;
     char output[20] = "now timer = ", num[10];
     itoa(timer,num);
     strcat (output,num);
-    int len = strlen (output);
+    len = strlen (output);
     if (count < len) 
         return -EINVAL;
     if (*ppos != 0) 
@@ -107,7 +108,7 @@ static ssize_t timer_read(struct file *file, char *buf, size_t count, loff_t *pp
     return len;
 }
 
-static ssize_t timer_write(struct file *file, char __user *buf, size_t count, loff_t *ppos)
+static ssize_t timer_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
 {
     char kerbuf[100];
     int len;

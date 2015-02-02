@@ -1,1 +1,0 @@
-cmd_/home/dracula/IT学习/C语言/kernel/timer/timer.ko := ld -r -m elf_i386 -T ./scripts/module-common.lds --build-id  -o /home/dracula/IT学习/C语言/kernel/timer/timer.ko /home/dracula/IT学习/C语言/kernel/timer/timer.o /home/dracula/IT学习/C语言/kernel/timer/timer.mod.o

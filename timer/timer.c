@@ -32,7 +32,7 @@ static void timer_func(unsigned long data)
         timer=0;
     printk ("%d\n", timer);
     timer = timer + 1;
-    mod_timer(&mytimer, jiffies + 1/1000 * interval * HZ);
+    mod_timer(&mytimer, jiffies + msecs_to_jiffies(interval));
 }
 
 static char *itoa(int num, char *str)
@@ -117,7 +117,7 @@ static ssize_t timer_write(struct file *file, char __user *buf, size_t count, lo
         return -EINVAL;
     len = strlen (kerbuf);
     timer = atoi(kerbuf);
-    mod_timer(&mytimer, jiffies + 1/1000 * interval * HZ);
+    mod_timer(&mytimer, jiffies + msecs_to_jiffies(interval));
     return len;
 }
 
@@ -137,7 +137,7 @@ static int __init timer_init(void)
 {
     if (time == 0) time=100*interval;
     setup_timer(&mytimer, timer_func,(unsigned long)timer);
-    mytimer.expires = jiffies + 1/1000 * interval * HZ;
+    mytimer.expires = jiffies + msecs_to_jiffies(interval);
     add_timer(&mytimer);
     misc_register(&timer_miscdevice);
     printk(KERN_INFO "timer devices has been registered\n");

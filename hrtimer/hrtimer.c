@@ -32,7 +32,7 @@ static struct hrtimer myhrtimer;
 static enum hrtimer_restart hrtimer_func(struct hrtimer *hr_timer)
 {
     if ( timer >= time || timer < 0) 
-        timer=0;
+        timer = 0;
     printk ("%d\n", timer);
     timer = timer + 1;
     hrtimer_start(&myhrtimer, ktime_set(0, MS_TO_NS(interval)), HRTIMER_MODE_REL);
